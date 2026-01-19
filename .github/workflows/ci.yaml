@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+    
+jobs:
+  docker-build-push:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repo 
+        uses: actions/checkout@v6
+
+      - name: Configure AWS Credentials 
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        run: |
+          set -e 
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/ecs-threat-model-app:${{ github.sha }} .
+          docker push ${{ steps.login-ecr.outputs.registry }}/ecs-threat-model-app:${{ github.sha }}
+      
+  terraform-plan:
+    runs-on: ubuntu-22.04
+    needs: docker-build-push
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v6
+
+      - name: TFLint
+        run: tflint --init && tflint
+
+      - name: Terraform fmt & validate
+        run: |
+          terraform fmt -check
+          terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan 
+
+
