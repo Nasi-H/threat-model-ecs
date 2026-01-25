@@ -1,3 +1,4 @@
+aws_region                     = "eu-west-2"
 environment_name               = "dev"
 project_name                   = "threat-model-ecs-project"
 vpc_cidr                       = "10.0.0.0/16"
