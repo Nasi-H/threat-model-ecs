@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
@@ -34,6 +34,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform init
+        working-directory: Terraform
         run: terraform init
 
       - name: Terraform Apply

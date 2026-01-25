@@ -37,7 +37,7 @@ jobs:
     needs: docker-build-push
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
@@ -52,24 +52,24 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform init
-        working-directory: terraform
+        working-directory: Terraform
         run: terraform init
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v6
 
       - name: TFLint
-        working-directory: terraform
+        working-directory: Terraform
         run: tflint --init && tflint
 
       - name: Terraform fmt & validate
-        working-directory: terraform
+        working-directory: Terraform
         run: |
           terraform fmt -check
           terraform validate
 
       - name: Terraform Plan
-        working-directory: terraform
+        working-directory: Terraform
         run: terraform plan 
 
 
