@@ -62,6 +62,10 @@ jobs:
         working-directory: Terraform
         run: tflint --init && tflint
 
+      - name: Terraform fmt
+        working-directory: Terraform
+        run: terraform fmt -recursive
+
       - name: Terraform fmt & validate
         working-directory: Terraform
         run: |
