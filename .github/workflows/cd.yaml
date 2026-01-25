@@ -38,9 +38,11 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
+        working-directory: Terraform
         if: github.event.inputs.action == 'apply'
         run: terraform apply -var="container_image=${{ secrets.ECR_REGISTRY }}/ecs-threat-model-app:${{ github.event.inputs.image_tag }}" -auto-approve
 
       - name: Terraform Destroy
+        working-directory: Terraform
         if: github.event.inputs.action == 'destroy'
         run: terraform destroy -auto-approve
