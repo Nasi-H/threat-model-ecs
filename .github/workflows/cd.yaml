@@ -37,6 +37,11 @@ jobs:
         working-directory: Terraform
         run: terraform init
 
+      - name: Debug Image Configuration
+        run: |
+          echo "Image tag input: '${{ github.event.inputs.image_tag }}'"
+          echo "Full image URL: '${{ secrets.ECR_REGISTRY }}/ecs-threat-model-app:${{ github.event.inputs.image_tag }}'"
+
       - name: Terraform Apply
         working-directory: Terraform
         if: github.event.inputs.action == 'apply'
