@@ -40,14 +40,23 @@ jobs:
       - name: Debug Image Configuration
         run: |
           echo "Image tag input: '${{ github.event.inputs.image_tag }}'"
+          echo "ECR Registry: '${{ secrets.ECR_REGISTRY }}'"
           echo "Full image URL: '${{ secrets.ECR_REGISTRY }}/ecs-threat-model-app:${{ github.event.inputs.image_tag }}'"
 
       - name: Terraform Apply
         working-directory: Terraform
         if: github.event.inputs.action == 'apply'
-        run: terraform apply -var="container_image=${{ secrets.ECR_REGISTRY }}/ecs-threat-model-app:${{ github.event.inputs.image_tag }}" -auto-approve -lock=false
+        env:
+          TF_VAR_container_image: "${{ secrets.ECR_REGISTRY }}/ecs-threat-model-app:${{ github.event.inputs.image_tag }}"
+        run: |
+          echo "Applying with image: ${TF_VAR_container_image}"
+          terraform apply -auto-approve -lock=false
 
       - name: Terraform Destroy
         working-directory: Terraform
         if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve -lock=false
+        env:
+          TF_VAR_container_image: "${{ secrets.ECR_REGISTRY }}/ecs-threat-model-app:${{ github.event.inputs.image_tag }}"
+        run: |
+          echo "Destroying with image: ${TF_VAR_container_image}"
+          terraform destroy -auto-approve -lock=false
