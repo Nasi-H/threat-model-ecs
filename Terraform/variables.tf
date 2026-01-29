@@ -94,11 +94,6 @@ variable "target_group_name" {
   description = "Name of the target group"
 }
 
-variable "target_group_port" {
-  type        = number
-  description = "Target group application port"
-}
-
 variable "health_check_path" {
   type        = string
   description = "Health check path"
@@ -122,21 +117,6 @@ variable "healthy_threshold" {
 variable "health_check_success_codes" {
   type        = string
   description = "HTTP success codes for health check"
-}
-
-variable "http_listener_port" {
-  type        = number
-  description = "HTTP listener port"
-}
-
-variable "https_listener_port" {
-  type        = number
-  description = "HTTPS listener port"
-}
-
-variable "ecr_repository_name" {
-  type        = string
-  description = "ECR repository name"
 }
 
 variable "container_image" {
@@ -228,11 +208,6 @@ variable "certificate_domain_name" {
 variable "hosted_zone_domain" {
   type        = string
   description = "Route 53 hosted zone domain name"
-}
-
-variable "record_subdomain" {
-  type        = string
-  description = "DNS record subdomain name"
 }
 
 variable "attached_policy_arn" {
