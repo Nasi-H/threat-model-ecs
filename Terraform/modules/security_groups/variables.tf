@@ -27,3 +27,8 @@ variable "alb_https_port" {
   type        = number
   description = "HTTPS port for ALB"
 }
+
+variable "container_port" {
+  type        = number
+  description = "Container port for ECS tasks"
+}

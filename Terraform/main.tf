@@ -19,6 +19,7 @@ module "security" {
   alb_allowed_ipv4_cidr = var.alb_allowed_ipv4_cidr
   alb_http_port = var.alb_http_port
   alb_https_port = var.alb_https_port
+  container_port = var.container_port
 }
 
 module "alb" {
@@ -68,9 +69,6 @@ module "ecs" {
   log_stream_prefix = var.log_stream_prefix
   execution_role_arn = module.iam.ecs_task_execution_role_arn
 }
-
-
-
 
 module "iam" {
   source = "./modules/iam"
