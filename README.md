@@ -47,7 +47,6 @@ The diagram below reflects the final deployed infrastructure.
     │   └── workflows
     │       ├── ci.yml
     │       └── cd.yml
-    ├── app
     ├── Dockerfile
     ├── Terraform
     │   ├── modules
